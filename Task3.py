@@ -1,0 +1,76 @@
+def printPath(path, v, u, route):
+    if path[v][u] == v:
+        return
+    printPath(path, v, path[v][u], route)
+    route.append(path[v][u])
+def printSolution(path, n):
+    for v in range(n):
+        for u in range(n):
+            if u != v and path[v][u] != -1:
+                route = [v]
+                printPath(path, v, u, route)
+                route.append(u)
+                print(f'The shortest path from {v} —> {u} is', route)
+def DeepMajhi(Areamatrix):
+    if not Areamatrix:
+        return
+    n = len(Areamatrix)
+    cost = Areamatrix.copy()
+    path = [[None for x in range(n)] for y in range(n)]
+    for v in range(n):
+        for u in range(n):
+            if v == u:
+                path[v][u] = 0
+            elif cost[v][u] != float('inf'):
+                path[v][u] = v
+            else:
+                path[v][u] = -1
+    for k in range(n):
+        for v in range(n):
+            for u in range(n):
+                
+                if cost[v][k] != float('inf') and cost[k][u] != float('inf') \
+                        and (cost[v][k] + cost[k][u] < cost[v][u]):
+                    cost[v][u] = cost[v][k] + cost[k][u]
+                    path[v][u] = path[k][u]
+
+            
+            if cost[v][v] < 0:
+                print('Negative-weight cycle found')
+                return
+
+    
+    printSolution(path, n)
+I = float('inf')
+m = int(input('Enter m grid = '))
+n = int(input('enter n grid = '))
+dn = int(input('Enter number of drones = '))
+  
+if(m>n):
+    xx=m
+else:
+    xx=n
+
+Areamatrix = [[0 for x in range(xx)] for y in range(xx)]
+
+
+for i in range(xx):
+    for j in range(xx):
+        if i != j:  
+            Areamatrix[i][j] = I
+
+
+for row in Areamatrix:
+    print(row)
+
+
+for a in range(dn):
+    l=list(map(int, input().split()))[:5]   
+    x1 = l[0]
+    y1 = l[1]
+    x2 = l[2]
+    y2 = l[3]
+    t = l[4]
+    print(l)
+    Areamatrix [x1][y2] = t
+DeepMajhi(Areamatrix)
